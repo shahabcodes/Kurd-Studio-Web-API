@@ -1,0 +1,81 @@
+@baseUrl = http://localhost:5000
+
+### Health Check
+GET {{baseUrl}}
+
+### Get all site data
+GET {{baseUrl}}/api/site/all
+
+### Get settings
+GET {{baseUrl}}/api/site/settings
+
+### Get profile
+GET {{baseUrl}}/api/site/profile
+
+### Get hero
+GET {{baseUrl}}/api/site/hero
+
+### Get sections
+GET {{baseUrl}}/api/site/sections
+
+### Get navigation
+GET {{baseUrl}}/api/site/navigation
+
+### Get social links
+GET {{baseUrl}}/api/site/social
+
+### Get all artworks
+GET {{baseUrl}}/api/artworks
+
+### Get artworks by type
+GET {{baseUrl}}/api/artworks?type=painting
+
+### Get artwork types
+GET {{baseUrl}}/api/artworks/types
+
+### Get featured artworks
+GET {{baseUrl}}/api/artworks/featured
+
+### Get artwork by slug
+GET {{baseUrl}}/api/artworks/dawn-at-the-quay
+
+### Get all writings
+GET {{baseUrl}}/api/writings
+
+### Get writings by type
+GET {{baseUrl}}/api/writings?type=poem
+
+### Get writing types
+GET {{baseUrl}}/api/writings/types
+
+### Get writing by slug
+GET {{baseUrl}}/api/writings/the-day-we-painted-quiet
+
+### Get image
+GET {{baseUrl}}/api/images/1
+
+### Get image thumbnail
+GET {{baseUrl}}/api/images/1/thumbnail
+
+### Submit contact form
+POST {{baseUrl}}/api/contact
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "subject": "Commission Request",
+  "budget": "$500 - $1000",
+  "message": "Hello! I'm interested in commissioning a custom artwork for my home office."
+}
+
+### Submit contact form - validation error
+POST {{baseUrl}}/api/contact
+Content-Type: application/json
+
+{
+  "name": "",
+  "email": "invalid-email",
+  "subject": "",
+  "message": "short"
+}

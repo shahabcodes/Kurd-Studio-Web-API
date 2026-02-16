@@ -1,0 +1,31 @@
+using KurdStudio.Api.Extensions;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services
+builder.Services.AddApplicationServices();
+builder.Services.AddCorsPolicy();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "Kurd Studio API", Version = "v1" });
+});
+
+var app = builder.Build();
+
+// Configure middleware
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseCors();
+
+// Map endpoints
+app.MapApiEndpoints();
+
+// Health check
+app.MapGet("/", () => Results.Ok(new { Status = "Healthy", Service = "Kurd Studio API" }));
+
+app.Run();
