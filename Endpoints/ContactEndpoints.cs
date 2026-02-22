@@ -42,8 +42,15 @@ public static class ContactEndpoints
 
         var id = await repository.CreateSubmissionAsync(request);
 
-        await notificationService.SendContactNotificationAsync(request, id);
+        var notification = await notificationService.SendContactNotificationAsync(request, id);
 
-        return Results.Created($"/api/contact/{id}", new { Id = id, Message = "Thank you! Your message has been sent." });
+        return Results.Created($"/api/contact/{id}", new
+        {
+            Id = id,
+            Message = "Thank you! Your message has been sent.",
+            // TODO: Remove debug fields after testing
+            NotificationSent = notification.Success,
+            NotificationResponse = notification.Response
+        });
     }
 }

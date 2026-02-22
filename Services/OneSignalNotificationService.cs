@@ -23,7 +23,7 @@ public class OneSignalNotificationService : INotificationService
         _logger = logger;
     }
 
-    public async Task SendContactNotificationAsync(ContactRequest request, int submissionId)
+    public async Task<NotificationResult> SendContactNotificationAsync(ContactRequest request, int submissionId)
     {
         try
         {
@@ -65,6 +65,8 @@ public class OneSignalNotificationService : INotificationService
             var response = await _httpClient.PostAsync(
                 "https://api.onesignal.com/notifications", content);
 
+            var responseBody = await response.Content.ReadAsStringAsync();
+
             if (response.IsSuccessStatusCode)
             {
                 _logger.LogInformation(
@@ -72,16 +74,18 @@ public class OneSignalNotificationService : INotificationService
             }
             else
             {
-                var responseBody = await response.Content.ReadAsStringAsync();
                 _logger.LogWarning(
                     "OneSignal returned {StatusCode} for submission {SubmissionId}: {Response}",
                     response.StatusCode, submissionId, responseBody);
             }
+
+            return new NotificationResult(response.IsSuccessStatusCode, responseBody);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex,
                 "Failed to send push notification for contact submission {SubmissionId}", submissionId);
+            return new NotificationResult(false, ex.Message);
         }
     }
 }

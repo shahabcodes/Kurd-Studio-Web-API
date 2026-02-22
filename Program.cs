@@ -42,4 +42,19 @@ app.MapApiEndpoints(apiPrefix);
 // Health check
 app.MapGet("/", () => Results.Ok(new { Status = "Healthy", Service = "Kurd Studio API" }));
 
+// Temporary diagnostic endpoint — remove after testing
+app.MapGet("/diag/onesignal", (
+    INotificationService notificationService,
+    Microsoft.Extensions.Options.IOptions<OneSignalSettings> settings) =>
+{
+    var cfg = settings.Value;
+    return Results.Ok(new
+    {
+        AppIdSet = !string.IsNullOrEmpty(cfg.AppId),
+        RestApiKeySet = !string.IsNullOrEmpty(cfg.RestApiKey),
+        RestApiKeyPrefix = cfg.RestApiKey.Length > 10 ? cfg.RestApiKey[..10] + "..." : "(empty)",
+        ServiceType = notificationService.GetType().Name
+    });
+});
+
 app.Run();
