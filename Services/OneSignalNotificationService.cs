@@ -63,7 +63,7 @@ public class OneSignalNotificationService : INotificationService
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Basic", _settings.RestApiKey);
+                new AuthenticationHeaderValue("Key", _settings.RestApiKey);
 
             var response = await _httpClient.PostAsync(
                 "https://onesignal.com/api/v1/notifications", content);
