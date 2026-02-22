@@ -46,6 +46,7 @@ public class OneSignalNotificationService : INotificationService
                 android_accent_color = "FFDB2777",
                 small_icon = "ic_stat_notification",
                 large_icon = "ic_launcher",
+                android_channel_id = "contact_submissions",
                 android_group = "contact_submissions",
                 android_group_message = new { en = "$[notif_count] new contact messages" },
                 priority = 10,
