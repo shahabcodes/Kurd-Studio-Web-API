@@ -1,6 +1,7 @@
 using FluentValidation;
 using KurdStudio.Api.Models.DTOs;
 using KurdStudio.Api.Repositories.Interfaces;
+using KurdStudio.Api.Services;
 
 namespace KurdStudio.Api.Endpoints;
 
@@ -22,7 +23,8 @@ public static class ContactEndpoints
     private static async Task<IResult> CreateSubmission(
         ContactRequest request,
         IContactRepository repository,
-        IValidator<ContactRequest> validator)
+        IValidator<ContactRequest> validator,
+        INotificationService notificationService)
     {
         var validationResult = await validator.ValidateAsync(request);
 
@@ -39,6 +41,8 @@ public static class ContactEndpoints
         }
 
         var id = await repository.CreateSubmissionAsync(request);
+
+        _ = notificationService.SendContactNotificationAsync(request, id);
 
         return Results.Created($"/api/contact/{id}", new { Id = id, Message = "Thank you! Your message has been sent." });
     }

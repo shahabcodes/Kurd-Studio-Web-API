@@ -1,8 +1,13 @@
 using KurdStudio.Api.Extensions;
+using KurdStudio.Api.Models.Configuration;
+using KurdStudio.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
+builder.Services.Configure<OneSignalSettings>(
+    builder.Configuration.GetSection(OneSignalSettings.SectionName));
+builder.Services.AddHttpClient<INotificationService, OneSignalNotificationService>();
 builder.Services.AddApplicationServices();
 builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
