@@ -7,7 +7,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services
 builder.Services.Configure<OneSignalSettings>(
     builder.Configuration.GetSection(OneSignalSettings.SectionName));
-builder.Services.AddHttpClient<INotificationService, OneSignalNotificationService>();
+builder.Services.AddHttpClient<INotificationService, OneSignalNotificationService>(client =>
+{
+    var oneSignalConfig = builder.Configuration.GetSection(OneSignalSettings.SectionName).Get<OneSignalSettings>();
+    if (oneSignalConfig is not null && !string.IsNullOrEmpty(oneSignalConfig.RestApiKey))
+    {
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", oneSignalConfig.RestApiKey);
+    }
+});
 builder.Services.AddApplicationServices();
 builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();

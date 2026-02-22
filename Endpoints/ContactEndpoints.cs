@@ -42,7 +42,7 @@ public static class ContactEndpoints
 
         var id = await repository.CreateSubmissionAsync(request);
 
-        _ = notificationService.SendContactNotificationAsync(request, id);
+        await notificationService.SendContactNotificationAsync(request, id);
 
         return Results.Created($"/api/contact/{id}", new { Id = id, Message = "Thank you! Your message has been sent." });
     }
