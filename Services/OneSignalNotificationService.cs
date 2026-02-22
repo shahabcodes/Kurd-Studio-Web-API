@@ -40,7 +40,7 @@ public class OneSignalNotificationService : INotificationService
             var payload = new
             {
                 app_id = _settings.AppId,
-                included_segments = new[] { "Subscribed Users" },
+                included_segments = new[] { "Total Subscriptions" },
                 headings = new { en = $"\u2709\ufe0f {request.Name}" },
                 contents = new { en = string.Join("\n", contentLines) },
                 android_accent_color = "FFDB2777",
@@ -63,10 +63,10 @@ public class OneSignalNotificationService : INotificationService
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Key", _settings.RestApiKey);
+                new AuthenticationHeaderValue("Basic", _settings.RestApiKey);
 
             var response = await _httpClient.PostAsync(
-                "https://onesignal.com/api/v1/notifications", content);
+                "https://api.onesignal.com/notifications", content);
 
             if (response.IsSuccessStatusCode)
             {
