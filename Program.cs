@@ -4,7 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services
 builder.Services.AddApplicationServices();
-builder.Services.AddCorsPolicy();
+builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -23,7 +23,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors();
 
 // Map endpoints
-app.MapApiEndpoints();
+var apiPrefix = builder.Configuration.GetValue<string>("ApiPrefix") ?? "/api";
+app.MapApiEndpoints(apiPrefix);
 
 // Health check
 app.MapGet("/", () => Results.Ok(new { Status = "Healthy", Service = "Kurd Studio API" }));

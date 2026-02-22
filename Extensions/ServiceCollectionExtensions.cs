@@ -25,13 +25,16 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddCorsPolicy(this IServiceCollection services)
+    public static IServiceCollection AddCorsPolicy(this IServiceCollection services, IConfiguration configuration)
     {
+        var origins = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+            ?? ["http://localhost:4200", "https://localhost:4200"];
+
         services.AddCors(options =>
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+                policy.WithOrigins(origins)
                       .AllowAnyMethod()
                       .AllowAnyHeader()
                       .AllowCredentials();

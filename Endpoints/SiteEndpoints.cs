@@ -46,7 +46,7 @@ public static class SiteEndpoints
         return Results.Ok(settings);
     }
 
-    private static async Task<IResult> GetProfile(ISiteRepository repository, HttpRequest request)
+    private static async Task<IResult> GetProfile(ISiteRepository repository, HttpRequest request, IConfiguration config)
     {
         var profile = await repository.GetProfileAsync();
 
@@ -55,7 +55,8 @@ public static class SiteEndpoints
             return Results.NotFound();
         }
 
-        var baseUrl = $"{request.Scheme}://{request.Host}";
+        var configuredBaseUrl = config["BaseUrl"];
+        var baseUrl = !string.IsNullOrEmpty(configuredBaseUrl) ? configuredBaseUrl : $"{request.Scheme}://{request.Host}";
         var avatarUrl = profile.AvatarImageId.HasValue
             ? $"{baseUrl}/api/images/{profile.AvatarImageId}"
             : null;
@@ -84,7 +85,7 @@ public static class SiteEndpoints
         return Results.Ok(sections);
     }
 
-    private static async Task<IResult> GetHero(ISiteRepository repository, HttpRequest request)
+    private static async Task<IResult> GetHero(ISiteRepository repository, HttpRequest request, IConfiguration config)
     {
         var hero = await repository.GetHeroContentAsync();
 
@@ -93,7 +94,8 @@ public static class SiteEndpoints
             return Results.NotFound();
         }
 
-        var baseUrl = $"{request.Scheme}://{request.Host}";
+        var configuredBaseUrl = config["BaseUrl"];
+        var baseUrl = !string.IsNullOrEmpty(configuredBaseUrl) ? configuredBaseUrl : $"{request.Scheme}://{request.Host}";
         var featuredImageUrl = hero.FeaturedImageId.HasValue
             ? $"{baseUrl}/api/images/{hero.FeaturedImageId}"
             : null;
@@ -128,7 +130,7 @@ public static class SiteEndpoints
         return Results.Ok(socialLinks);
     }
 
-    private static async Task<IResult> GetAllSiteData(ISiteRepository repository, HttpRequest request)
+    private static async Task<IResult> GetAllSiteData(ISiteRepository repository, HttpRequest request, IConfiguration config)
     {
         var settingsTask = repository.GetSettingsAsync();
         var profileTask = repository.GetProfileAsync();
@@ -146,7 +148,8 @@ public static class SiteEndpoints
         var nav = await navTask;
         var social = await socialTask;
 
-        var baseUrl = $"{request.Scheme}://{request.Host}";
+        var configuredBaseUrl = config["BaseUrl"];
+        var baseUrl = !string.IsNullOrEmpty(configuredBaseUrl) ? configuredBaseUrl : $"{request.Scheme}://{request.Host}";
 
         var settingsDict = settings.ToDictionary(s => s.SettingKey, s => s.SettingValue);
 

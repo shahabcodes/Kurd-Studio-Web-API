@@ -31,11 +31,13 @@ public static class ArtworkEndpoints
     private static async Task<IResult> GetArtworks(
         IArtworkRepository repository,
         HttpRequest request,
+        IConfiguration config,
         string? type = null)
     {
         var artworks = await repository.GetAllAsync(type);
 
-        var baseUrl = $"{request.Scheme}://{request.Host}";
+        var configuredBaseUrl = config["BaseUrl"];
+        var baseUrl = !string.IsNullOrEmpty(configuredBaseUrl) ? configuredBaseUrl : $"{request.Scheme}://{request.Host}";
 
         var dtos = artworks.Select(a => new ArtworkDto(
             a.Id,
@@ -60,11 +62,12 @@ public static class ArtworkEndpoints
         return Results.Ok(types);
     }
 
-    private static async Task<IResult> GetFeatured(IArtworkRepository repository, HttpRequest request)
+    private static async Task<IResult> GetFeatured(IArtworkRepository repository, HttpRequest request, IConfiguration config)
     {
         var artworks = await repository.GetFeaturedAsync();
 
-        var baseUrl = $"{request.Scheme}://{request.Host}";
+        var configuredBaseUrl = config["BaseUrl"];
+        var baseUrl = !string.IsNullOrEmpty(configuredBaseUrl) ? configuredBaseUrl : $"{request.Scheme}://{request.Host}";
 
         var dtos = artworks.Select(a => new ArtworkDto(
             a.Id,
@@ -83,7 +86,7 @@ public static class ArtworkEndpoints
         return Results.Ok(dtos);
     }
 
-    private static async Task<IResult> GetBySlug(string slug, IArtworkRepository repository, HttpRequest request)
+    private static async Task<IResult> GetBySlug(string slug, IArtworkRepository repository, HttpRequest request, IConfiguration config)
     {
         var artwork = await repository.GetBySlugAsync(slug);
 
@@ -92,7 +95,8 @@ public static class ArtworkEndpoints
             return Results.NotFound();
         }
 
-        var baseUrl = $"{request.Scheme}://{request.Host}";
+        var configuredBaseUrl = config["BaseUrl"];
+        var baseUrl = !string.IsNullOrEmpty(configuredBaseUrl) ? configuredBaseUrl : $"{request.Scheme}://{request.Host}";
 
         var dto = new ArtworkDto(
             artwork.Id,

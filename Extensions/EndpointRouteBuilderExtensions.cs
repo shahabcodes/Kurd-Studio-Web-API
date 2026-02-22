@@ -4,9 +4,9 @@ namespace KurdStudio.Api.Extensions;
 
 public static class EndpointRouteBuilderExtensions
 {
-    public static IEndpointRouteBuilder MapApiEndpoints(this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder MapApiEndpoints(this IEndpointRouteBuilder endpoints, string prefix = "/api")
     {
-        var api = endpoints.MapGroup("/api");
+        var api = endpoints.MapGroup(prefix);
 
         api.MapImageEndpoints();
         api.MapSiteEndpoints();
