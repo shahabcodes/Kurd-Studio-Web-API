@@ -31,3 +31,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Production secrets
+appsettings.Production.json
